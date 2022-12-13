@@ -23,6 +23,8 @@
 package no.nordicsemi.android.mesh.transport;
 
 import no.nordicsemi.android.mesh.logger.MeshLogger;
+
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.nio.ByteBuffer;
@@ -750,12 +752,17 @@ abstract class LowerTransportLayer extends UpperTransportLayer {
         controlMessage.setSrc(src);
         controlMessage.setDst(dst);
         controlMessage.setIvIndex(mUpperTransportLayerCallbacks.getIvIndex());
-        final int sequenceNumber = mUpperTransportLayerCallbacks.getNode(controlMessage.getSrc()).incrementSequenceNumber();
-        final byte[] sequenceNum = MeshParserUtils.getSequenceNumberBytes(sequenceNumber);
-        controlMessage.setSequenceNumber(sequenceNum);
-        mBlockAckSent = true;
-        mLowerTransportLayerCallbacks.sendSegmentAcknowledgementMessage(controlMessage);
-        mSegmentedAccessAcknowledgementTimerStarted = false;
+        ProvisionedMeshNode node = mUpperTransportLayerCallbacks.getNode(controlMessage.getSrc());
+        if (node != null) {
+            final int sequenceNumber = node.incrementSequenceNumber();
+            final byte[] sequenceNum = MeshParserUtils.getSequenceNumberBytes(sequenceNumber);
+            controlMessage.setSequenceNumber(sequenceNum);
+            mBlockAckSent = true;
+            mLowerTransportLayerCallbacks.sendSegmentAcknowledgementMessage(controlMessage);
+            mSegmentedAccessAcknowledgementTimerStarted = false;
+        } else {
+            MeshLogger.warn(TAG, "Cannot find node with src address: " + src + ". Cannot send AcknowledgementMessage");
+        }
     }
 
     /**
