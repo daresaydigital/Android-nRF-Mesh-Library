@@ -117,10 +117,10 @@ class ImportExportUtils {
             network.setPartial(partial);
             return mGson.toJson(network);
         } catch (final com.google.gson.JsonSyntaxException ex) {
-            MeshLogger.error(TAG, "Error: " + ex.getMessage());
+            MeshLogger.error(TAG, "Error exporting mesh", ex);
             return null;
         } catch (final Exception e) {
-            MeshLogger.error(TAG, "Error: " + e.getMessage());
+            MeshLogger.error(TAG, "Error exporting mesh", e);
             return null;
         }
     }

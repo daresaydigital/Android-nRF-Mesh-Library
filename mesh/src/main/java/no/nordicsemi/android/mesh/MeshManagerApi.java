@@ -895,7 +895,7 @@ public class MeshManagerApi implements MeshMngrApi {
             final MeshNetwork meshNetwork = mMeshNetwork;
             return mImportExportUtils.export(meshNetwork, false);
         } catch (Exception ex) {
-            mMeshManagerCallbacks.onNetworkImportFailed(ex.getMessage());
+            MeshLogger.error(TAG, "Failed to export network.", ex);
         }
         return null;
     }
