@@ -785,13 +785,13 @@ public class MeshManagerApi implements MeshMngrApi {
      * {@link MeshManagerCallbacks#onNetworkLoaded(MeshNetwork)} will return the newly generated network
      * </p>
      */
-    public final void resetMeshNetwork() {
+    public final void resetMeshNetwork(@Nullable UUID id) {
         //We delete the existing network as the user has already given the
         ivUpdateTestModeActive = false;
         allowIvIndexRecoveryOver42 = false;
         final MeshNetwork meshNet = mMeshNetwork;
         deleteMeshNetworkFromDb(meshNet);
-        final MeshNetwork newMeshNetwork = generateMeshNetwork();
+        final MeshNetwork newMeshNetwork = generateMeshNetwork((id != null ? id : UUID.randomUUID()));
         newMeshNetwork.setCallbacks(callbacks);
         insertNetwork(newMeshNetwork);
         mMeshNetwork = newMeshNetwork;
@@ -804,18 +804,17 @@ public class MeshManagerApi implements MeshMngrApi {
      * {@link MeshManagerCallbacks#onNetworkLoaded(MeshNetwork)} will return the newly generated network
      * </p>
      */
-    public final void createMeshNetwork() {
+    public final void createMeshNetwork(@Nullable UUID id) {
         ivUpdateTestModeActive = false;
         allowIvIndexRecoveryOver42 = false;
-        final MeshNetwork newMeshNetwork = generateMeshNetwork();
+        final MeshNetwork newMeshNetwork = generateMeshNetwork((id != null ? id : UUID.randomUUID()));
         newMeshNetwork.setCallbacks(callbacks);
         insertNetwork(newMeshNetwork);
         mMeshNetwork = newMeshNetwork;
         mMeshManagerCallbacks.onNetworkLoaded(newMeshNetwork);
     }
-
-    private MeshNetwork generateMeshNetwork() {
-        final String meshUuid = UUID.randomUUID().toString().toUpperCase(Locale.US);
+    private MeshNetwork generateMeshNetwork(final UUID uuid) {
+        final String meshUuid = uuid.toString().toUpperCase(Locale.US);
 
         final MeshNetwork network = new MeshNetwork(meshUuid);
         network.netKeys = generateNetKeys(meshUuid);
@@ -1197,7 +1196,7 @@ public class MeshManagerApi implements MeshMngrApi {
             final MeshNetwork network;
             //If there is no network we generate a new one
             if (meshNetwork == null) {
-                network = generateMeshNetwork();
+                network = generateMeshNetwork(UUID.randomUUID());
                 insertNetwork(network);
             } else {
                 network = meshNetwork;
