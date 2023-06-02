@@ -77,10 +77,11 @@ public final class NodeDeserializer implements JsonSerializer<List<ProvisionedMe
 
             if (jsonObject.has("features")) {
                 final JsonObject featuresJson = jsonObject.get("features").getAsJsonObject();
-                node.nodeFeatures = new Features(featuresJson.get("friend").getAsInt(),
-                        featuresJson.get("lowPower").getAsInt(),
-                        featuresJson.get("relay").getAsInt(),
-                        featuresJson.get("proxy").getAsInt());
+                node.nodeFeatures = new Features(
+                        featuresJson.has("friend") ? featuresJson.get("friend").getAsInt() : Features.UNKNOWN,
+                        featuresJson.has("lowPower") ? featuresJson.get("lowPower").getAsInt() : Features.UNKNOWN,
+                        featuresJson.has("relay") ? featuresJson.get("relay").getAsInt() : Features.UNKNOWN,
+                        featuresJson.has("proxy") ? featuresJson.get("proxy").getAsInt() : Features.UNKNOWN);
             }
 
             if (jsonObject.has("secureNetworkBeacon")) {
@@ -187,10 +188,18 @@ public final class NodeDeserializer implements JsonSerializer<List<ProvisionedMe
 
             if (node.getNodeFeatures() != null) {
                 final JsonObject json = new JsonObject();
-                json.addProperty("friend", node.getNodeFeatures().getFriend());
-                json.addProperty("lowPower", node.getNodeFeatures().getLowPower());
-                json.addProperty("proxy", node.getNodeFeatures().getProxy());
-                json.addProperty("relay", node.getNodeFeatures().getRelay());
+                if (node.getNodeFeatures().getFriend() != Features.UNKNOWN) {
+                    json.addProperty("friend", node.getNodeFeatures().getFriend());
+                }
+                if (node.getNodeFeatures().getLowPower() != Features.UNKNOWN) {
+                    json.addProperty("lowPower", node.getNodeFeatures().getLowPower());
+                }
+                if (node.getNodeFeatures().getProxy() != Features.UNKNOWN) {
+                    json.addProperty("proxy", node.getNodeFeatures().getProxy());
+                }
+                if (node.getNodeFeatures().getRelay() != Features.UNKNOWN) {
+                    json.addProperty("relay", node.getNodeFeatures().getRelay());
+                }
                 nodeJson.add("features", json);
             }
 

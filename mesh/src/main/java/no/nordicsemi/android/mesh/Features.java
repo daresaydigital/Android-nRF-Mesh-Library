@@ -20,7 +20,7 @@ import no.nordicsemi.android.mesh.transport.ProvisionedMeshNode;
 public class Features implements Parcelable {
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({DISABLED, ENABLED, UNSUPPORTED})
+    @IntDef({DISABLED, ENABLED, UNSUPPORTED, UNKNOWN})
     @interface FeatureState {
     }
 
@@ -28,6 +28,7 @@ public class Features implements Parcelable {
     public static final int DISABLED = 0; //Feature is disabled
     public static final int ENABLED = 1; //Feature is enabled
     public static final int UNSUPPORTED = 2; //Feature is not supported
+    public static final int UNKNOWN = 3; // Feature support is unknown
 
     @SerializedName("friend")
     @Expose
@@ -173,11 +174,11 @@ public class Features implements Parcelable {
      */
     public boolean isFriendFeatureSupported() {
         switch (friend) {
+            default:
             case UNSUPPORTED:
                 return false;
             case ENABLED:
             case DISABLED:
-            default:
                 return true;
         }
     }
@@ -187,11 +188,11 @@ public class Features implements Parcelable {
      */
     public boolean isRelayFeatureSupported() {
         switch (relay) {
+            default:
             case UNSUPPORTED:
                 return false;
             case ENABLED:
             case DISABLED:
-            default:
                 return true;
         }
     }
@@ -201,11 +202,11 @@ public class Features implements Parcelable {
      */
     public boolean isProxyFeatureSupported() {
         switch (proxy) {
+            default:
             case UNSUPPORTED:
                 return false;
             case ENABLED:
             case DISABLED:
-            default:
                 return true;
         }
     }
@@ -215,11 +216,11 @@ public class Features implements Parcelable {
      */
     public boolean isLowPowerFeatureSupported() {
         switch (lowPower) {
+            default:
             case UNSUPPORTED:
                 return false;
             case ENABLED:
             case DISABLED:
-            default:
                 return true;
         }
     }
