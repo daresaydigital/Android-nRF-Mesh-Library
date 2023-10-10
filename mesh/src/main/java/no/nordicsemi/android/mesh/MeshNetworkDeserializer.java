@@ -51,19 +51,8 @@ public final class MeshNetworkDeserializer implements JsonSerializer<MeshNetwork
         final String meshUuid = formatUuid(uuid);
         final MeshNetwork network = new MeshNetwork(meshUuid == null ? uuid : meshUuid);
 
-        final String schema = jsonObject.get("$schema").getAsString();
-        if (!schema.equalsIgnoreCase("http://json-schema.org/draft-04/schema#"))
-            throw new JsonSyntaxException("Invalid Mesh Provisioning/Configuration Database JSON file, unsupported schema");
-        network.schema = schema;
-        final String id = jsonObject.get("id").getAsString();
-        if (!id.equalsIgnoreCase(ID)) {
-            if (id.equalsIgnoreCase("TBD"))
-                network.id = ID;
-            else
-                throw new JsonSyntaxException("Invalid Mesh Provisioning/Configuration Database JSON file, unsupported ID");
-        } else {
-            network.id = id;
-        }
+        network.schema = jsonObject.get("$schema").getAsString();
+        network.id = jsonObject.get("id").getAsString();
         network.version = jsonObject.get("version").getAsString();
         network.meshName = jsonObject.get("meshName").getAsString();
 

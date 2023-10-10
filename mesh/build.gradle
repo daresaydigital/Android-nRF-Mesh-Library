@@ -22,8 +22,9 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'no.nordicsemi.android.mesh'
+    compileSdk 32
 
-    compileSdkVersion 32
     group 'no.nordicsemi.android.mesh'
 
     defaultConfig {
